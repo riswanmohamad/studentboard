@@ -26,6 +26,22 @@
     --radius: 0.75rem;
     --success: 142.1 76.2% 36.3%;
     --success-foreground: 355.7 100% 97.3%;
+    --info: 210 100% 56%;
+    --info-foreground: 210 20% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 48 96% 89%;
+    --blue: 217 91% 60%;
+    --blue-foreground: 210 20% 98%;
+    --green: 142 71% 45%;
+    --green-foreground: 210 20% 98%;
+    --orange: 25 95% 53%;
+    --orange-foreground: 210 20% 98%;
+    --purple: 262 83% 58%;
+    --purple-foreground: 210 20% 98%;
+    --pink: 330 81% 60%;
+    --pink-foreground: 210 20% 98%;
+    --teal: 173 80% 40%;
+    --teal-foreground: 210 20% 98%;
   }
 
   .dark {
@@ -50,6 +66,22 @@
     --ring: 263.4 70% 50.4%;
     --success: 142.1 70.6% 45.3%;
     --success-foreground: 144.9 80.4% 10%;
+    --info: 210 100% 50%;
+    --info-foreground: 210 20% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 48 96% 89%;
+    --blue: 217 91% 55%;
+    --blue-foreground: 210 20% 98%;
+    --green: 142 71% 40%;
+    --green-foreground: 210 20% 98%;
+    --orange: 25 95% 48%;
+    --orange-foreground: 210 20% 98%;
+    --purple: 262 83% 53%;
+    --purple-foreground: 210 20% 98%;
+    --pink: 330 81% 55%;
+    --pink-foreground: 210 20% 98%;
+    --teal: 173 80% 35%;
+    --teal-foreground: 210 20% 98%;
   }
 }
 
@@ -66,6 +98,34 @@
 html {
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Ensure color combinations work for dynamic classes */
+@layer utilities {
+  .text-blue-700 { @apply text-blue; }
+  .text-blue-300 { @apply text-blue; }
+  .text-green-700 { @apply text-green; }
+  .text-green-300 { @apply text-green; }
+  .text-purple-700 { @apply text-purple; }
+  .text-purple-300 { @apply text-purple; }
+  .text-orange-700 { @apply text-orange; }
+  .text-orange-300 { @apply text-orange; }
+  .text-teal-700 { @apply text-teal; }
+  .text-teal-300 { @apply text-teal; }
+  .text-pink-700 { @apply text-pink; }
+  .text-pink-300 { @apply text-pink; }
+  .text-blue-600 { @apply text-blue; }
+  .text-blue-400 { @apply text-blue; }
+  .text-green-600 { @apply text-green; }
+  .text-green-400 { @apply text-green; }
+  .text-purple-600 { @apply text-purple; }
+  .text-purple-400 { @apply text-purple; }
+  .text-orange-600 { @apply text-orange; }
+  .text-orange-400 { @apply text-orange; }
+  .text-teal-600 { @apply text-teal; }
+  .text-teal-400 { @apply text-teal; }
+  .text-pink-600 { @apply text-pink; }
+  .text-pink-400 { @apply text-pink; }
 }
 
 /* Safe area for mobile notches */

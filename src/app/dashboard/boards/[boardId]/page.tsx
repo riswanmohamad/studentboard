@@ -367,35 +367,45 @@ export default function BoardViewPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {filteredCards.map((card) => {
+                {filteredCards.map((card, index) => {
                   const checkTotal = card.checklist_items?.length || 0;
                   const checkDone =
                     card.checklist_items?.filter((i) => i.is_done).length || 0;
                   const nextAction = getNextAction(card.status);
+                  
+                  // Color based on status and rotation through colors
+                  const statusColors = {
+                    'not_started': ['blue', 'purple', 'teal', 'orange'] as const,
+                    'in_progress': ['orange', 'yellow', 'pink', 'purple'] as const,
+                    'done': ['green', 'teal', 'blue', 'purple'] as const,
+                  };
+                  
+                  const colorOptions = statusColors[card.status as keyof typeof statusColors] || statusColors.not_started;
+                  const colorClass = colorOptions[index % colorOptions.length];
 
                   return (
                     <Card
                       key={card.id}
-                      className="overflow-hidden active:scale-[0.98] transition-transform cursor-pointer"
+                      className={`overflow-hidden active:scale-[0.98] transition-all duration-200 cursor-pointer bg-gradient-to-br from-${colorClass}/12 via-${colorClass}/6 to-background border-${colorClass}/25 hover:border-${colorClass}/40 hover:shadow-lg hover:shadow-${colorClass}/10`}
                       onClick={() => openCard(card)}
                     >
                       <CardContent className="p-3">
                         <div className="flex items-start gap-3">
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-sm leading-tight">
+                            <p className={`font-medium text-sm leading-tight text-${colorClass}-700 dark:text-${colorClass}-300`}>
                               {card.title}
                             </p>
                             <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                               {checkTotal > 0 && (
                                 <span className="text-xs text-muted-foreground flex items-center gap-1">
-                                  <CheckCircle2 className="w-3 h-3" />
+                                  <CheckCircle2 className={`w-3 h-3 text-${colorClass}`} />
                                   {checkDone}/{checkTotal}
                                 </span>
                               )}
                               {card.plan !== "none" && (
                                 <Badge
                                   variant="info"
-                                  className="text-xs py-0 px-1.5"
+                                  className={`text-xs py-0 px-1.5 bg-${colorClass}/15 text-${colorClass}-700 dark:text-${colorClass}-300 border-${colorClass}/30`}
                                 >
                                   {getPlanLabel(card.plan)}
                                 </Badge>
@@ -411,7 +421,7 @@ export default function BoardViewPage() {
                                     ? "success"
                                     : "outline"
                                 }
-                                className="h-8 text-xs gap-1"
+                                className={`h-8 text-xs gap-1 ${nextAction.status !== "done" ? 'border-' + colorClass + '/30 text-' + colorClass + '-600 dark:text-' + colorClass + '-400 hover:bg-' + colorClass + '/10' : ''}`}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   moveCard(card.id, nextAction.status);

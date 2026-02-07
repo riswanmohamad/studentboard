@@ -96,18 +96,20 @@ export default function BoardsListPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {boards.map((board) => {
+            {boards.map((board, index) => {
               const progress = calculateProgress(board.done, board.total);
+              const colors = ['blue', 'green', 'purple', 'orange', 'teal', 'pink'];
+              const colorClass = colors[index % colors.length];
               return (
                 <Link
                   key={board.id}
                   href={`/dashboard/boards/${board.id}`}
                 >
-                  <Card className="hover:bg-muted/50 transition-colors cursor-pointer h-full">
+                  <Card className={`hover:bg-${colorClass}/5 transition-all duration-200 cursor-pointer h-full bg-gradient-to-br from-${colorClass}/12 via-${colorClass}/6 to-background border-${colorClass}/25 hover:border-${colorClass}/40 hover:shadow-lg hover:shadow-${colorClass}/10`}>
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-sm">
+                          <h3 className={`font-semibold text-sm text-${colorClass}-700 dark:text-${colorClass}-300`}>
                             {board.name}
                           </h3>
                           <p className="text-xs text-muted-foreground mt-0.5">
@@ -117,7 +119,7 @@ export default function BoardsListPage() {
                         </div>
                         <Badge
                           variant={progress === 100 ? "success" : "secondary"}
-                          className="text-xs"
+                          className={`text-xs ${progress === 100 ? '' : 'bg-' + colorClass + '/15 text-' + colorClass + '-700 dark:text-' + colorClass + '-300 border-' + colorClass + '/30'}`}
                         >
                           {progress}%
                         </Badge>
@@ -125,16 +127,16 @@ export default function BoardsListPage() {
                       <Progress value={progress} className="h-2 mb-2" />
                       <div className="flex items-center gap-4 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3" />
+                          <CheckCircle2 className={`w-3 h-3 text-${colorClass}`} />
                           {board.done} / {board.total} sections
                         </span>
                         {board.show_weekly && (
-                          <Badge variant="outline" className="text-xs py-0">
+                          <Badge variant="outline" className={`text-xs py-0 border-${colorClass}/30 text-${colorClass}-600 dark:text-${colorClass}-400`}>
                             Weekly
                           </Badge>
                         )}
                         {board.show_monthly && (
-                          <Badge variant="outline" className="text-xs py-0">
+                          <Badge variant="outline" className={`text-xs py-0 border-${colorClass}/30 text-${colorClass}-600 dark:text-${colorClass}-400`}>
                             Monthly
                           </Badge>
                         )}
