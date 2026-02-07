@@ -70,13 +70,16 @@ export default function BoardsListPage() {
   return (
     <>
       <Header title="My Boards" />
-      <div className="px-4 py-4 space-y-4">
-        <Button asChild className="w-full gap-2">
-          <Link href="/dashboard/boards/new">
-            <Plus className="w-4 h-4" />
-            Create New Board
-          </Link>
-        </Button>
+      <div className="px-4 md:px-6 py-4 md:py-6 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h2 className="text-xl font-semibold hidden md:block">All Boards</h2>
+          <Button asChild className="gap-2 sm:w-auto">
+            <Link href="/dashboard/boards/new">
+              <Plus className="w-4 h-4" />
+              Create New Board
+            </Link>
+          </Button>
+        </div>
 
         {loading ? (
           <div className="flex justify-center py-12">
@@ -92,7 +95,7 @@ export default function BoardsListPage() {
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {boards.map((board) => {
               const progress = calculateProgress(board.done, board.total);
               return (
@@ -100,7 +103,7 @@ export default function BoardsListPage() {
                   key={board.id}
                   href={`/dashboard/boards/${board.id}`}
                 >
-                  <Card className="hover:bg-muted/50 transition-colors cursor-pointer mb-3">
+                  <Card className="hover:bg-muted/50 transition-colors cursor-pointer h-full">
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">

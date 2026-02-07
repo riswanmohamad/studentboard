@@ -92,12 +92,13 @@ export default function BoardSettingsPage() {
   return (
     <>
       <Header title="Board Settings" showLogo={false} />
-      <div className="px-4 py-4 space-y-4">
-        <Link
-          href={`/dashboard/boards/${boardId}`}
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="w-4 h-4" />
+      <div className="px-4 md:px-6 py-4 md:py-6">
+        <div className="max-w-lg mx-auto space-y-4">
+          <Link
+            href={`/dashboard/boards/${boardId}`}
+            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="w-4 h-4" />
           Back to board
         </Link>
 
@@ -206,6 +207,7 @@ export default function BoardSettingsPage() {
             </AlertDialog>
           </CardContent>
         </Card>
+        </div>
       </div>
     </>
   );

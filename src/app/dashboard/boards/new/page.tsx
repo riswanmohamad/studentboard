@@ -95,14 +95,15 @@ export default function CreateBoardPage() {
   return (
     <>
       <Header title="Create Board" showLogo={false} />
-      <div className="px-4 py-4">
-        <Link
-          href="/dashboard/boards"
-          className="flex items-center gap-1 text-sm text-muted-foreground mb-4 hover:text-foreground"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back
-        </Link>
+      <div className="px-4 md:px-6 py-4 md:py-6">
+        <div className="max-w-lg mx-auto">
+          <Link
+            href="/dashboard/boards"
+            className="flex items-center gap-1 text-sm text-muted-foreground mb-4 hover:text-foreground"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </Link>
 
         {/* Step 1: Select Grade */}
         <Card className="mb-4">
@@ -244,6 +245,7 @@ export default function CreateBoardPage() {
             </Button>
           </div>
         )}
+        </div>
       </div>
     </>
   );

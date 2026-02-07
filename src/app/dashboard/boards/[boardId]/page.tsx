@@ -264,8 +264,8 @@ export default function BoardViewPage() {
     <>
       {/* Compact Header */}
       <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur">
-        <div className="flex items-center justify-between h-14 px-4 max-w-lg mx-auto">
-          <div className="flex items-center gap-2 flex-1 min-w-0">
+        <div className="flex items-center justify-between h-14 px-4 md:px-6 max-w-lg md:max-w-none lg:max-w-4xl xl:max-w-5xl mx-auto">
+          <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
             <Link
               href="/dashboard/boards"
               className="text-muted-foreground hover:text-foreground"
@@ -273,7 +273,7 @@ export default function BoardViewPage() {
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div className="min-w-0">
-              <h1 className="font-semibold text-sm truncate">{board.name}</h1>
+              <h1 className="font-semibold text-sm md:text-base truncate">{board.name}</h1>
               <p className="text-xs text-muted-foreground">
                 {doneCards}/{totalCards} sections &middot; {progressPct}%
               </p>
@@ -290,7 +290,7 @@ export default function BoardViewPage() {
         <Progress value={progressPct} className="h-1 rounded-none" />
       </header>
 
-      <div className="px-4 py-3">
+      <div className="px-4 md:px-6 py-3 md:py-4">
         {/* Lane Switcher */}
         <Tabs
           value={activeLane}
@@ -366,7 +366,7 @@ export default function BoardViewPage() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {filteredCards.map((card) => {
                   const checkTotal = card.checklist_items?.length || 0;
                   const checkDone =

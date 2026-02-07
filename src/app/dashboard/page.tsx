@@ -146,9 +146,11 @@ export default function DashboardHomePage() {
   return (
     <>
       <Header />
-      <div className="px-4 py-4 space-y-6">
-        {/* Continue Studying Card */}
-        <Card className="bg-gradient-to-br from-primary/10 via-primary/5 to-background border-primary/20">
+      <div className="px-4 md:px-6 py-4 md:py-6 space-y-6">
+        {/* Desktop: Two column layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Continue Studying Card */}
+          <Card className="bg-gradient-to-br from-primary/10 via-primary/5 to-background border-primary/20">
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="text-base">Continue Studying</CardTitle>
@@ -177,8 +179,8 @@ export default function DashboardHomePage() {
           </CardContent>
         </Card>
 
-        {/* Today Section */}
-        <div>
+          {/* Today Section */}
+          <div className="lg:row-span-1">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold flex items-center gap-2">
               <Zap className="w-4 h-4 text-primary" />
@@ -222,6 +224,7 @@ export default function DashboardHomePage() {
               </CardContent>
             </Card>
           )}
+          </div>
         </div>
 
         {/* All Boards Overview */}
@@ -236,7 +239,7 @@ export default function DashboardHomePage() {
                 View all
               </Link>
             </div>
-            <div className="space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {boards.slice(0, 4).map((board) => {
                 const p = calculateProgress(board.done, board.total);
                 return (

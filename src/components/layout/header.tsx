@@ -8,9 +8,10 @@ interface HeaderProps {
 export function Header({ title, showLogo = true }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex items-center gap-2 h-14 px-4 max-w-lg mx-auto">
+      <div className="flex items-center gap-2 h-14 px-4 md:px-6 max-w-lg md:max-w-none lg:max-w-4xl xl:max-w-5xl mx-auto">
+        {/* Logo - only show on mobile */}
         {showLogo && (
-          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center md:hidden">
             <BookOpen className="w-4 h-4 text-primary-foreground" />
           </div>
         )}
