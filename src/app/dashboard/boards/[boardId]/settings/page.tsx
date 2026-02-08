@@ -1,214 +1,25 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
-import { createClient } from "@/lib/supabase/client";
+import { getBoardDetails } from "@/lib/actions/boards";
+import BoardSettingsContent from "./board-settings-content";
 import { Header } from "@/components/layout/header";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { ArrowLeft, RotateCcw, Loader2 } from "lucide-react";
-import { trackEvent, EVENTS } from "@/lib/posthog";
-import type { Board } from "@/lib/types";
 
-export default function BoardSettingsPage() {
-  const params = useParams();
-  const router = useRouter();
-  const boardId = params.boardId as string;
+interface PageProps {
+  params: Promise<{ boardId: string }>;
+}
 
-  const [board, setBoard] = useState<Board | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [resetting, setResetting] = useState(false);
+export default async function BoardSettingsPage({ params }: PageProps) {
+  const { boardId } = await params;
+  const { board } = await getBoardDetails(boardId);
 
-  useEffect(() => {
-    loadBoard();
-  }, []);
-
-  async function loadBoard() {
-    const supabase = createClient();
-    const { data } = await supabase
-      .from("boards")
-      .select("*, subject:subjects(*)")
-      .eq("id", boardId)
-      .single();
-
-    if (data) setBoard(data);
-    setLoading(false);
-  }
-
-  async function updateSetting(
-    field: "show_weekly" | "show_monthly",
-    value: boolean
-  ) {
-    const supabase = createClient();
-    await supabase.from("boards").update({ [field]: value }).eq("id", boardId);
-    setBoard((prev) => (prev ? { ...prev, [field]: value } : null));
-  }
-
-  async function handleReset() {
-    setResetting(true);
-    try {
-      const response = await fetch(`/api/boards/${boardId}/reset`, {
-        method: "POST",
-      });
-
-      if (response.ok) {
-        trackEvent(EVENTS.BOARD_RESET, { board_id: boardId });
-        router.push(`/dashboard/boards/${boardId}`);
-      }
-    } catch {
-      // Handle error silently
-    } finally {
-      setResetting(false);
-    }
-  }
-
-  if (loading) {
+  if (!board) {
     return (
       <>
         <Header title="Settings" showLogo={false} />
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-pulse text-muted-foreground">Loading...</div>
+        <div className="px-4 py-12 text-center">
+          <p className="text-muted-foreground">Board not found.</p>
         </div>
       </>
     );
   }
 
-  if (!board) return null;
-
-  return (
-    <>
-      <Header title="Board Settings" showLogo={false} />
-      <div className="px-4 md:px-6 py-4 md:py-6">
-        <div className="max-w-lg mx-auto space-y-4">
-          <Link
-            href={`/dashboard/boards/${boardId}`}
-            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="w-4 h-4" />
-          Back to board
-        </Link>
-
-        {/* Board Info */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Board Info</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Name</span>
-              <span className="font-medium">{board.name}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Grade</span>
-              <span className="font-medium">Grade {board.grade}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Subject</span>
-              <span className="font-medium">
-                {board.subject?.name || "—"}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Planning Options */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Planning Options</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label className="text-sm font-medium">Weekly Plan</Label>
-                <p className="text-xs text-muted-foreground">
-                  Filter &quot;In Progress&quot; by weekly plan
-                </p>
-              </div>
-              <Switch
-                checked={board.show_weekly}
-                onCheckedChange={(v) => updateSetting("show_weekly", v)}
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <Label className="text-sm font-medium">Monthly Plan</Label>
-                <p className="text-xs text-muted-foreground">
-                  Filter &quot;In Progress&quot; by monthly plan
-                </p>
-              </div>
-              <Switch
-                checked={board.show_monthly}
-                onCheckedChange={(v) => updateSetting("show_monthly", v)}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Danger Zone */}
-        <Card className="border-destructive/30">
-          <CardHeader>
-            <CardTitle className="text-base text-destructive">
-              Danger Zone
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              This will move all cards back to &quot;Not Started&quot; and
-              uncheck all checklist items. Your notes will be preserved.
-            </p>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="destructive"
-                  className="w-full gap-2"
-                  disabled={resetting}
-                >
-                  {resetting ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <RotateCcw className="w-4 h-4" />
-                  )}
-                  Reset Board
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Reset this board?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This will move all cards back to &quot;Not Started&quot;,
-                    clear all plan flags, and uncheck all checklist items.
-                    Your notes will be kept. This action cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleReset}
-                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  >
-                    Yes, reset board
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </CardContent>
-        </Card>
-        </div>
-      </div>
-    </>
-  );
+  return <BoardSettingsContent initialBoard={board} />;
 }
